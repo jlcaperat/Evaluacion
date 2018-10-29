@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head></h:head>
+<body>
+	<ui:composition template="/WEB-INF/templates/master.xhtml">
+
+		<ui:define name="content">
+			<h1>Usuarios</h1>
+			<h:form>
+				<p:inputText value="#{usuBean.usuario.usuario}" />
+				<p:commandButton value="Buscar"
+					actionListener="#{usuBean.listarPorNombre()}" update="data" />
+
+				<p:dataTable value="#{usuBean.lista}" var="e" id="data">
+
+					<p:column headerText="Perfil de usuario">
+						<p:outputLabel value="#{e.usuario}" />
+					</p:column>
+
+					<p:column headerText="Nombre Usuario">
+						<p:outputLabel value="#{e.persona.nombres}" />
+					</p:column>
+
+					<p:column headerText="Modificar">
+						<p:commandButton value="Modificar"
+							actionListener="#{usuBean.leerUsuario(e)}"
+							oncomplete="PF('dlg2').show();" update=":jdialogo"
+							immediate="true" />
+					</p:column>
+				</p:dataTable>
+
+			</h:form>
+
+			<p:dialog id="jdialogo" header="Usuario" widgetVar="dlg2"
+				modal="true" resizable="false" draggable="true">
+			
+<h:panelGrid  columns="4"  >			
+				<h:form id="fdialogo">
+
+					<p:outputLabel value="Usuario : " />
+					<p:outputLabel value="#{usuBean.usuario.usuario}" />
+
+					<p:column></p:column>
+					<p:column></p:column>
+
+
+					<p:outputLabel value="Usuario" />
+					<p:inputText value="#{usuBean.usuario.usuario}" disabled="true" />
+					<p:column></p:column>
+					<p:column></p:column>
+
+
+					<p:outputLabel value="Contraseña Actual" />
+					<p:password value="#{usuBean.veriPass}" />
+
+
+					<p:commandButton value="Verificar"
+						actionListener="#{usuBean.verificarContra()}" immediate="true">
+						<f:ajax execute="@form" render="@form" />
+					</p:commandButton>
+
+
+					<p:column></p:column>
+
+					<p:outputLabel value="Nueva Contraseña" />
+					<p:password  value="#{usuBean.modiPass}" id="clave1" match="clave2"
+						promptLabel="ingrese contraseña"
+						validatorMessage="las claves no coninciden" />
+					<p:column></p:column>
+					<p:column></p:column>
+
+					<p:outputLabel value="Repetir contraseña" />
+					<p:password id="clave2" />
+
+					<p:column></p:column>
+					<p:column></p:column>
+
+					<p:column></p:column>
+
+					<p:commandButton value="Modificar" rendered="#{usuBean.visible}"
+						actionListener="#{usuBean.modificarUsuario()}" />
+					<p:commandButton value="Cancelar" onclick="PF('dlg2').hide();" />
+				</h:form>
+				</h:panelGrid>
+			
+
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>
